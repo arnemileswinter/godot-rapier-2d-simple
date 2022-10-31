@@ -1,0 +1,13 @@
+# unix-type EOL
+* text=auto eol=lf
+
+# Ignore files on zip export for godot asset place.
+/.github            export-ignore
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/justfile           export-ignore
+/LICENSE.md         export-ignore
+/README.md          export-ignore
+/project.godot      export-ignore
+/.screenshots       export-ignore
+/native             export-ignore
