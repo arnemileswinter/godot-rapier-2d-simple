@@ -1,0 +1,14 @@
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="godot_"
+reloadable=true
+
+[entry]
+
+Windows.64="res://addons/rapier-2d-simple/bin/library-windows-x86_64.dll"
+
+[dependencies]
+
+Windows.64=[  ]

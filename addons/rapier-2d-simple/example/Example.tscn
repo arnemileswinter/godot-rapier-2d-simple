@@ -1,0 +1,75 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://addons/rapier-2d-simple/classes/rapier_2d_world.gdns" type="Script" id=1]
+[ext_resource path="res://addons/rapier-2d-simple/example/Ball.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/rapier-2d-simple/classes/rapier_2d_fixed_body.gdns" type="Script" id=3]
+[ext_resource path="res://addons/rapier-2d-simple/classes/rapier_2d_cuboid_collider.gdns" type="Script" id=4]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+onready var world = $Rapier2DWorld
+onready var ballcount_label = $BallCount
+var _ball_count = 0
+
+func _unhandled_input(event):
+	if event is InputEventKey and event.scancode == KEY_SPACE:
+		var n : Node2D = preload(\"res://addons/rapier-2d-simple/example/Ball.tscn\").instance()
+		n.global_position = get_global_mouse_position()
+		world.add_child(n)
+		_ball_count += 1
+		ballcount_label.text = str(_ball_count)
+		
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Label
+
+func _process(delta):
+	self.text = str(Engine.get_frames_per_second())
+"
+
+[node name="Example" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="FPSLabel" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+script = SubResource( 2 )
+
+[node name="BallCount" type="Label" parent="."]
+margin_top = 24.0
+margin_right = 40.0
+margin_bottom = 38.0
+
+[node name="Rapier2DWorld" type="Node2D" parent="."]
+script = ExtResource( 1 )
+pixels_per_meter = 16.0
+
+[node name="Ball" parent="Rapier2DWorld" instance=ExtResource( 2 )]
+
+[node name="Rapier2DFixedBody" type="Node2D" parent="Rapier2DWorld"]
+position = Vector2( 466, 547 )
+script = ExtResource( 3 )
+
+[node name="Rapier2DCuboidCollider" type="Node2D" parent="Rapier2DWorld/Rapier2DFixedBody"]
+position = Vector2( 45, 36 )
+script = ExtResource( 4 )
+half_extents = Vector2( 35, 0.5 )
+
+[node name="Rapier2DCuboidCollider4" type="Node2D" parent="Rapier2DWorld/Rapier2DFixedBody"]
+position = Vector2( 49, -567 )
+script = ExtResource( 4 )
+half_extents = Vector2( 35, 0.5 )
+
+[node name="Rapier2DCuboidCollider2" type="Node2D" parent="Rapier2DWorld/Rapier2DFixedBody"]
+position = Vector2( -466, -259 )
+rotation = 1.57079
+script = ExtResource( 4 )
+half_extents = Vector2( 20, 0.5 )
+
+[node name="Rapier2DCuboidCollider3" type="Node2D" parent="Rapier2DWorld/Rapier2DFixedBody"]
+position = Vector2( 557, -270 )
+rotation = 1.57079
+script = ExtResource( 4 )
+half_extents = Vector2( 20, 0.5 )

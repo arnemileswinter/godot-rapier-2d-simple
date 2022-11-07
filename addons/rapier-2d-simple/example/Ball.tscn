@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/rapier-2d-simple/classes/rapier_2d_ball_collider.gdns" type="Script" id=1]
+[ext_resource path="res://addons/rapier-2d-simple/classes/rapier_2d_dynamic_body.gdns" type="Script" id=2]
+
+[node name="Ball" type="Node2D"]
+position = Vector2( 230, 74 )
+script = ExtResource( 2 )
+
+[node name="Rapier2DBallCollider" type="Node2D" parent="."]
+script = ExtResource( 1 )
