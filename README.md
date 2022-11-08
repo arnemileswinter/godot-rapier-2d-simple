@@ -1,6 +1,6 @@
 # Broken: Godot Rapier2d Simple
 
-Motivation for this project was to integrate rapier2d physics into godot while keeping the scene tree editor's inheritance semantics.
+Motivation for this project was to integrate rapier2d physics into godot while keeping the scene tree editor's compositional semantics.
 
 Unfortunately i realized too late that Godot 3.5 does not allow NativeScript's to be extended. **Therefore this entire project is of little use.**
 
