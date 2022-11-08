@@ -75,11 +75,7 @@ impl GodotRapier2DWorld {
     }
 
     #[method]
-    fn add_child(
-        &mut self,
-        #[base] base: TRef<'_, Node2D>,
-        node: Ref<Node>
-    ) {
+    fn add_child(&mut self, #[base] base: TRef<'_, Node2D>, node: Ref<Node>) {
         base.add_child(node, false);
         self._register_child(base, node)
     }

@@ -40,19 +40,27 @@ macro_rules! proxy_world_awareness_to_world_props {
             }
 
             fn remove_from_world(&mut self, base: TRef<'_, Node2D>) {
-                self.world_props.world_ref = None;
-                self.world_props.handle = None;
-                self.world_props.world_ppm = None;
-
                 base.get_children().iter().for_each(|c| {
                     let Ok(n) = c.try_to() else {return;};
                     self._unregister_child(base, n);
-                })
+                });
+
+                if let Some(world) = self.world_props.world_ref.as_ref().and_then(Weak::upgrade) {
+                    if let Some(handle) = self.world_props.handle {
+                        world.borrow_mut().remove_rigid_body(handle)
+                    }
+                };
+
+                self.world_props.world_ref = None;
+                self.world_props.handle = None;
+                self.world_props.world_ppm = None;
             }
         }
     };
 }
 
+// bridges common props towards collider builder.
+// stores a raw pointer box to reference of `base` on the heap, which must be dropped eventually.
 macro_rules! complete_body {
     ($self:ident,$base:ident,$ppm:ident,$builder:expr) => {{
         use rapier2d::prelude::*;
@@ -62,6 +70,7 @@ macro_rules! complete_body {
                 $base.position().y / $ppm.0
             ])
             .rotation($base.rotation() as f32)
+            .user_data(&$base.claim() as *const Ref<Node2D> as u128)
             .build()
     }};
 }

@@ -68,6 +68,12 @@ macro_rules! proxy_world_awareness_to_world_props {
             }
 
             fn remove_from_world(&mut self, base: TRef<'_, Node2D>) {
+                if let Some(world) = self.world_props.world_ref.as_ref().and_then(Weak::upgrade) {
+                    if let Some(handle) = self.world_props.handle {
+                        world.borrow_mut().remove_collider(handle)
+                    }
+                };
+
                 self.world_props.world_ref = None;
                 self.world_props.handle = None;
                 self.world_props.world_ppm = None;
@@ -94,6 +100,16 @@ impl Default for ColliderProps {
         }
     }
 }
+
+macro_rules! register_emitted_signals {
+    ($builder:ident) => {
+        $builder.signal("collider_entered").with_param_untyped("collider").done();
+        $builder.signal("collider_exited").with_param_untyped("collider").done();
+        $builder.signal("collision_started").with_param_untyped("collider").done();
+        $builder.signal("collision_ended").with_param_untyped("collider").done();
+    };
+}
+
 // bridges godot editor property setting to colliderprops member.
 macro_rules! proxy_properties_to_collider_props {
     ($builder: ident) => {
@@ -147,6 +163,7 @@ macro_rules! proxy_properties_to_collider_props {
 }
 
 // bridges common props towards collider builder.
+// stores a raw pointer box to reference of `base` on the heap, which must be dropped eventually.
 macro_rules! complete_collider {
     ($self:ident,$base:ident,$ppm:ident,$builder:expr) => {{
         use rapier2d::prelude::*;
@@ -160,6 +177,8 @@ macro_rules! complete_collider {
             .density($self.collider_props.density)
             .restitution($self.collider_props.restitution)
             .sensor($self.collider_props.is_sensor)
+            .user_data(&$base.claim() as *const Ref<Node2D> as u128)
+            .active_events(r2d::ActiveEvents::all())
             .build()
     }};
 }
@@ -208,6 +227,7 @@ impl GodotRapier2DColliderBall {
             })
             .done();
         proxy_properties_to_collider_props!(builder);
+        register_emitted_signals!(builder);
     }
 
     #[method]

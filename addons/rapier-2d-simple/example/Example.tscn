@@ -47,6 +47,7 @@ script = ExtResource( 1 )
 pixels_per_meter = 16.0
 
 [node name="Ball" parent="Rapier2DWorld" instance=ExtResource( 2 )]
+position = Vector2( 400, 449 )
 
 [node name="Rapier2DFixedBody" type="Node2D" parent="Rapier2DWorld"]
 position = Vector2( 466, 547 )
